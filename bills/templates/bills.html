@@ -12,10 +12,21 @@
         {{ form.as_p }}
         <button type="submit">Отправить</button>
     </form>
-    <ul>
+    <table border="1", bgcolor="#7fffd4">
+        <tr>
+            <th>Организация</th>
+            <th>№</th>
+            <th>Сумма</th>
+            <th>Дата</th>
+        </tr>
         {% for bill in bills %}
-        <li>{{ bill.client_org }} {{ bill.bill_number }} {{ bill.bill_sum }} {{ bill.date }}</li>
+        <tr>
+            <td>{{ bill.client_org }}</td>
+            <td>{{ bill.bill_number }}</td>
+            <td>{{ bill.bill_sum }}</td>
+            <td>{{ bill.bill_date }}</td>
+        </tr>
         {% endfor %}
-    </ul>
+    </table>
 </body>
 </html>
