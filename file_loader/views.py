@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.db.utils import IntegrityError
 import openpyxl
 from rest_framework import views
-
 from clients.models import Client, Organization
 from bills.models import Bill
 
@@ -31,11 +30,14 @@ class LoadClientOrg(views.View):
     def post(self, request):
         excel_file = request.FILES["excel_file"]
         table_data, sheet_names = get_table_data(excel_file)
+        if len(sheet_names) < 2:
+            return render(request, 'load_bills.html', {'text': 'Ошибка при загрузке файла'})
+
         clients = table_data[sheet_names[0]]
         for client in clients:
-            client_ = Client(client_name=client[0])
+            new_client = Client(client_name=client[0])
             try:
-                client_.save()
+                new_client.save()
             except IntegrityError:
                 pass
         organizations = table_data[sheet_names[1]]
@@ -63,16 +65,22 @@ class LoadBills(views.View):
         table_data, sheet_names = get_table_data(excel_file)
         bills = table_data[sheet_names[0]]
         for bill in bills:
-            client_org = Organization.objects.get(organization_name=bill[0])
+            organization_name = bill[0]
+            client_org = Organization.objects.filter(organization_name=organization_name)
+
             if client_org:
+                bill_number, bill_sum, bill_date = bill[1], bill[2], bill[3]
                 new_bill = Bill(
-                    client_org=client_org,
-                    bill_number=bill[1],
-                    bill_sum=bill[2],
-                    bill_date=bill[3]
+                    client_org=client_org[0],
+                    bill_number=bill_number,
+                    bill_sum=bill_sum,
+                    bill_date=bill_date
                 )
                 try:
                     new_bill.save()
                 except IntegrityError:
                     pass
+            else:
+                return render(request, 'load_bills.html', {'text': 'Ошибка при загрузке файла'})
+
         return render(request, 'load_bills.html', {'text': 'Файл успешно загружен'})

@@ -34,7 +34,3 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.organization_name
-
-
-
-

@@ -22,5 +22,4 @@ urlpatterns = [
     path('file_load/', include('file_loader.urls')),
     path('bills/', include('bills.urls')),
     path('', include('file_loader.urls')),
-
 ]
