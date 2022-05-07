@@ -3,7 +3,7 @@ from .models import Bill
 
 
 @admin.register(Bill)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ['bill_number']
+class BillAdmin(admin.ModelAdmin):
+    list_display = ['bill_number', 'client_org', 'bill_sum', 'bill_date']
 
 

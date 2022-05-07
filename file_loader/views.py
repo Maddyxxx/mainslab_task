@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.db.utils import IntegrityError
 import openpyxl
+from rest_framework import views
+
 from clients.models import Client, Organization
 from bills.models import Bill
 
@@ -21,11 +23,12 @@ def get_table_data(excel_file):
     return data, sheet_names
 
 
-def load_client_org(request):
-    if "GET" == request.method:
+class LoadClientOrg(views.View):
+
+    def get(self, request):
         return render(request, 'load_client_org.html', {})
-    else:
-        data = {}
+
+    def post(self, request):
         excel_file = request.FILES["excel_file"]
         table_data, sheet_names = get_table_data(excel_file)
         clients = table_data[sheet_names[0]]
@@ -47,13 +50,15 @@ def load_client_org(request):
                     org.save()
                 except IntegrityError:
                     pass
-        return render(request, 'load_client_org.html')
+        return render(request, 'load_client_org.html', {'text': 'Файл успешно загружен'})
 
 
-def load_bills(request):
-    if "GET" == request.method:
+class LoadBills(views.View):
+
+    def get(self, request):
         return render(request, 'load_bills.html', {})
-    else:
+
+    def post(self, request):
         excel_file = request.FILES["excel_file"]
         table_data, sheet_names = get_table_data(excel_file)
         bills = table_data[sheet_names[0]]
@@ -70,5 +75,4 @@ def load_bills(request):
                     new_bill.save()
                 except IntegrityError:
                     pass
-
-        return render(request, 'load_bills.html')
+        return render(request, 'load_bills.html', {'text': 'Файл успешно загружен'})
