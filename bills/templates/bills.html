@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bills</title>
+
+</head>
+<body>
+    <h1>Bills</h1>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Отправить</button>
+    </form>
+    <ul>
+        {% for bill in bills %}
+        <li>{{ bill.client_org }} {{ bill.bill_number }} {{ bill.bill_sum }} {{ bill.date }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

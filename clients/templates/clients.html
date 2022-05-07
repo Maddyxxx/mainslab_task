@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients</title>
+
+</head>
+<body>
+    <h1>Clients</h1>
+    <table border="1", bgcolor="#7fffd4">
+        <tr>
+            <th>Название клиента</th>
+            <th>Кол-во организаций</th>
+            <th>Приход (сумма по счетам всех организаций клиента)</th>
+        </tr>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client.client_name }}</td>
+            <td>{{ client.organization_count }}</td>
+            <td>{{ client.bills_sum }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
